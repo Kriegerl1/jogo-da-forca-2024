@@ -1,117 +1,98 @@
-﻿namespace JogoDaForca.ConsoleApp
+namespace JogoDaForca.ConsoleApp
 {
-    internal partial class Program
+    public class JogoForca
     {
-        public class Palavra
+        public string palavraSelecionada;
+        public char[] palavraMascarada;
+        public int tentativas = 0;
+
+        public void MostrarLetra()
         {
-            public string palavraSelecionada;
-            public char[] palavraMascarada;
-            public int tentativas = 0;
+            bool acertou;
+            bool fimDeJogo = false;
 
-            public void mostraLetra(string palavraSelecionada, char[] palavraMascarada, ref int tentativas)
+            while (!fimDeJogo)
             {
-                bool acertou;
-                bool fimDeJogo = false;
+                Console.WriteLine("Jogo da Forca | Academia de Programação!\n");
+                geraForca(tentativas);
 
-                while (!fimDeJogo)
-                {
-                    Console.WriteLine("Jogo da Forca | Academia de Programação!\n");
-                    geraForca(tentativas);
+                Console.WriteLine($"\n\nA palavra escondida é: {string.Join(" ", palavraMascarada)}\n");
+                char letraDigitada = Program.obterValor<char>("Digite uma letra: ").ToString().ToUpper()[0];
 
-                    Console.WriteLine($"\n\nA palavra escondida é: {string.Join(" ", palavraMascarada)}\n");
-                    char letraDigitada = obterValor<char>("Digite uma letra: ").ToString().ToUpper()[0];
+                acertou = false;
 
-                    acertou = false;
-
-                    for (int i = 0; i < palavraSelecionada.Length; i++)
-                    {
-                        if (letraDigitada == palavraSelecionada[i])
-                        {
-                            palavraMascarada[i] = letraDigitada;
-                            acertou = true;
-                        }
-
-                    }
-
-                    Console.Clear();
-                    respostaErrada(palavraSelecionada, ref tentativas, acertou, ref fimDeJogo);
-
-                }
-
-            }
-
-            public void ganhaJogo(string palavraSelecionada, char[] palavraMascarada, ref int tentativas, ref bool fimDeJogo)
-            {
                 for (int i = 0; i < palavraSelecionada.Length; i++)
-                    if (palavraSelecionada[i] == palavraMascarada.Length && tentativas < 0)
-                    {
-                        {
-                            Console.WriteLine("Parabéns, você venceu!");
-                            fimDeJogo = true;
-
-                            if (jogarNovamente())
-                            {
-                                Environment.Exit(0);
-                            };
-                        }
-                    }
-            }
-
-            public void respostaErrada(string palavraSelecionada, ref int tentativas, bool acertou, ref bool fimDeJogo)
-            {
-                if (!acertou)
                 {
-                    tentativas++;
-                    if (tentativas >= 5)
+                    if (letraDigitada == palavraSelecionada[i])
                     {
-                        Console.WriteLine("Você perdeu! :(\n\n\n");
-                        Console.WriteLine($"\t\t\tA palavra correta era {palavraSelecionada}\n\n");
-                        fimDeJogo = true;
+                        palavraMascarada[i] = letraDigitada;
+                        acertou = true;
                     }
+
                 }
-            }
 
-            public void geradorPalavra(out string palavraSelecionada, out char[] palavraMascarada)
-            {
-                Random randomizador = new Random();
-                string[] palavras = {"ABACATE", "ABACAXI", "ACEROLA", "ACAI", "ARACA", "BACABA", "BACURI",
-                        "BANANA", "CAJA", "CAJU", "CARAMBOLA", "CUPUACU", "GRAVIOLA", "GOIABA", "JABUTICABA",
-                        "JENIPAPO", "MACA", "MANGABA", "MANGA", "MARACUJA", "MURICI", "PEQUI", "PITANGA",
-                        "PITAYA", "SAPOTI", "TANGERINA", "UMBU", "UVA", "UVAIA"};
+                Console.Clear();
+                VerificarRespostaErrada(acertou, ref fimDeJogo);
 
-                int indicePalavraSelecionada = randomizador.Next(palavras.Length);
-                palavraSelecionada = palavras[indicePalavraSelecionada];
-                palavraMascarada = new string('_', palavraSelecionada.Length).ToCharArray();
-            }
-
-            public void geraForca(int tentativas)
-            {
-                switch (tentativas)
-                {
-                    case 0:
-                        Console.WriteLine("________\n |\t|\n |\t\n | \n | \n | \n_|___");
-                        break;
-                    case 1:
-                        Console.WriteLine("________\n |\t|\n |\tO\n |\t|\n | \n | \n_|___");
-                        break;
-                    case 2:
-                        Console.WriteLine("________\n |\t|\n |\tO\n |     /|\n | \n | \n_|___");
-                        break;
-                    case 3:
-                        Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n | \n | \n_|___");
-                        break;
-                    case 4:
-                        Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n |     / \n | \n_|___");
-                        break;
-                    case 5:
-                        Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n |     / \\\n | \n_|___");
-                        break;
-                    default:
-                        break;
-                }
             }
 
         }
 
+        public void VerificarRespostaErrada(bool acertou, ref bool fimDeJogo)
+        {
+            if (!acertou)
+            {
+                tentativas++;
+                if (tentativas >= 5)
+                {
+                    Console.WriteLine("Você perdeu! :(\n\n\n");
+                    Console.WriteLine($"\t\t\tA palavra correta era {palavraSelecionada}\n\n");
+                    fimDeJogo = true;
+                }
+            }
+        }
+
+        public void geradorPalavra()
+        {
+            Random randomizador = new Random();
+            string[] palavras = {"ABACATE", "ABACAXI", "ACEROLA", "ACAI", "ARACA", "BACABA", "BACURI",
+                        "BANANA", "CAJA", "CAJU", "CARAMBOLA", "CUPUACU", "GRAVIOLA", "GOIABA", "JABUTICABA",
+                        "JENIPAPO", "MACA", "MANGABA", "MANGA", "MARACUJA", "MURICI", "PEQUI", "PITANGA",
+                        "PITAYA", "SAPOTI", "TANGERINA", "UMBU", "UVA", "UVAIA"};
+
+            int indicePalavraSelecionada = randomizador.Next(palavras.Length);
+            palavraSelecionada = palavras[indicePalavraSelecionada];
+            palavraMascarada = new string('_', palavraSelecionada.Length).ToCharArray();
+        }
+
+        public void geraForca(int tentativas)
+        {
+            switch (tentativas)
+            {
+                case 0:
+                    Console.WriteLine("________\n |\t|\n |\t\n | \n | \n | \n_|___");
+                    break;
+                case 1:
+                    Console.WriteLine("________\n |\t|\n |\tO\n |\t|\n | \n | \n_|___");
+                    break;
+                case 2:
+                    Console.WriteLine("________\n |\t|\n |\tO\n |     /|\n | \n | \n_|___");
+                    break;
+                case 3:
+                    Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n | \n | \n_|___");
+                    break;
+                case 4:
+                    Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n |     / \n | \n_|___");
+                    break;
+                case 5:
+                    Console.WriteLine("________\n |\t|\n |\tO\n |     /|\\\n |     / \\\n | \n_|___");
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
+
 }
+
