@@ -1,17 +1,18 @@
-﻿namespace JogoDaForca.ConsoleApp
+namespace JogoDaForca.ConsoleApp
 {
-    internal partial class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             #region Main
             while (true)
             {
 
 
-                Palavra novoJogo = new Palavra();
-                novoJogo.geradorPalavra(out novoJogo.palavraSelecionada, out novoJogo.palavraMascarada);
-                novoJogo.mostraLetra(novoJogo.palavraSelecionada, novoJogo.palavraMascarada, ref novoJogo.tentativas);
+                JogoForca novoJogo = new JogoForca();
+                
+                novoJogo.geradorPalavra();
+                novoJogo.MostrarLetra();
 
                 if (jogarNovamente()) break;
 
@@ -20,7 +21,7 @@
             #endregion
         }
         #region Métodos
-        static bool jogarNovamente()
+        public static bool jogarNovamente()
         {
             Console.WriteLine("Deseja Continuar? (S / N)");
             string resposta = Console.ReadLine().ToUpper();
@@ -30,7 +31,7 @@
 
         }
 
-        static T obterValor<T>(string texto)
+        public static T obterValor<T>(string texto)
         {
             Console.WriteLine(texto);
             string input = Console.ReadLine();
